@@ -1,0 +1,20 @@
+1. **Start Menu**: The game must display a start menu for the user to select an action. The menu should include the following options:
+    1.1 Play a new game
+    1.2 Resume a game
+    1.3 Read game instructions
+    1.4 Quit the game
+    1.5 The menu must handle input sanitization and prompt for re-entry if necessary.
+
+2. **New Game**: If the user selects to play a new game, the game should:
+    2.1 Generate an 8x8 grid with different sized ships for the computer.
+        2.1.1 The ships should include 2 destroyers (1 cell), 2 submarines (2 cells), and 1 aircraft carrier (3 cells).
+        2.1.2 Ships can be placed either horizontally or vertically.
+    2.2 Prompt the user to fill their grid with ships.
+        2.2.1 The user interface should ask for a coordinate input and an orientation.
+        2.2.2 Coordinates will be represented with numbers 1-8 along the Y-axis and letters A-H along the X-axis.
+        2.2.3 The program must validate coordinate inputs and not allow the same coordinate to be entered twice.
+    2.3 Orientation should be either "H" (horizontal) or "V" (vertical).
+
+3. **Gameplay**: When playing the game, the program should:
+    3.1 Alternate turns between the computer and the player. If a player hits a ship, they get another turn.
+    3.2 Keep track of the score as a number out of 9 total necessary hits to sink the entire enemy fleet. This number should be stored as an integer and updated every player turn.

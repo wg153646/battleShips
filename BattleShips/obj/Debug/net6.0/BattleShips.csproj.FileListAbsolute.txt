@@ -1,0 +1,14 @@
+C:\Users\P16s\OneDrive - Hills Road Sixth Form College\Computer science\Programming\BattleShips\BattleShips\bin\Debug\net6.0\BattleShips.exe
+C:\Users\P16s\OneDrive - Hills Road Sixth Form College\Computer science\Programming\BattleShips\BattleShips\bin\Debug\net6.0\BattleShips.deps.json
+C:\Users\P16s\OneDrive - Hills Road Sixth Form College\Computer science\Programming\BattleShips\BattleShips\bin\Debug\net6.0\BattleShips.runtimeconfig.json
+C:\Users\P16s\OneDrive - Hills Road Sixth Form College\Computer science\Programming\BattleShips\BattleShips\bin\Debug\net6.0\BattleShips.dll
+C:\Users\P16s\OneDrive - Hills Road Sixth Form College\Computer science\Programming\BattleShips\BattleShips\bin\Debug\net6.0\BattleShips.pdb
+C:\Users\P16s\OneDrive - Hills Road Sixth Form College\Computer science\Programming\BattleShips\BattleShips\obj\Debug\net6.0\BattleShips.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\P16s\OneDrive - Hills Road Sixth Form College\Computer science\Programming\BattleShips\BattleShips\obj\Debug\net6.0\BattleShips.AssemblyInfoInputs.cache
+C:\Users\P16s\OneDrive - Hills Road Sixth Form College\Computer science\Programming\BattleShips\BattleShips\obj\Debug\net6.0\BattleShips.AssemblyInfo.cs
+C:\Users\P16s\OneDrive - Hills Road Sixth Form College\Computer science\Programming\BattleShips\BattleShips\obj\Debug\net6.0\BattleShips.csproj.CoreCompileInputs.cache
+C:\Users\P16s\OneDrive - Hills Road Sixth Form College\Computer science\Programming\BattleShips\BattleShips\obj\Debug\net6.0\BattleShips.dll
+C:\Users\P16s\OneDrive - Hills Road Sixth Form College\Computer science\Programming\BattleShips\BattleShips\obj\Debug\net6.0\refint\BattleShips.dll
+C:\Users\P16s\OneDrive - Hills Road Sixth Form College\Computer science\Programming\BattleShips\BattleShips\obj\Debug\net6.0\BattleShips.pdb
+C:\Users\P16s\OneDrive - Hills Road Sixth Form College\Computer science\Programming\BattleShips\BattleShips\obj\Debug\net6.0\BattleShips.genruntimeconfig.cache
+C:\Users\P16s\OneDrive - Hills Road Sixth Form College\Computer science\Programming\BattleShips\BattleShips\obj\Debug\net6.0\ref\BattleShips.dll

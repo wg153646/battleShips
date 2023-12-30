@@ -10,8 +10,7 @@ namespace BattleBoats_assessment
 {
     struct posVector
     {
-        public int x,
-            y;
+        public int x, y;
         //Stores the x and y coords of a position vector.
     }
 
@@ -30,9 +29,11 @@ namespace BattleBoats_assessment
             PlaySound("mainmenu.wav");
             Welcome();
             StartMenu();
+            
         }
 
         static void RunGame(
+            
             bool resumeGame,
             char[,] importedPlayerGrid,
             char[,] importedPlayerAttemptsGrid,
@@ -77,8 +78,8 @@ namespace BattleBoats_assessment
                 //Player turn ends here
 
                 //Check if user has won yet
-                // if amount of 'S' in ComputerGrid is 0 then player wins
-                if (!ContainsChar(computerGrid, 'S'))
+                // if amount of 'B' in ComputerGrid is 0 then player wins
+                if (!ContainsChar(computerGrid, 'B'))
                 {
                     //Player wins if there are no more ships left on enemy board.
                     EndGame("Player");
@@ -89,8 +90,8 @@ namespace BattleBoats_assessment
                 //Computer turn ends here
 
                 //Check if user has won yet
-                // if amount of 'S' in ComputerGrid is 0 then player wins
-                if (!ContainsChar(computerGrid, 'S'))
+                // if amount of 'B' in ComputerGrid is 0 then player wins
+                if (!ContainsChar(computerGrid, 'B'))
                 {
                     //Player wins if there are no more ships left on enemy board.
                     EndGame("Player");
@@ -113,8 +114,7 @@ namespace BattleBoats_assessment
 
         static void UserTurn(char[,] enemyGrid, char[,] playerAttemptsGrid, char[,] userGrid)
         {
-            int rowIndex = 0,
-                columnIndex = 0;
+            int rowIndex = 0, columnIndex = 0;
             bool inputValid = false,
                 repeatTurn = false;
             Console.Clear();
@@ -126,10 +126,9 @@ namespace BattleBoats_assessment
             ColorWrite("-----ATTEMPTS GRID--------", ConsoleColor.Blue);
             DisplayGrid(playerAttemptsGrid, ConsoleColor.Blue);
             Console.WriteLine("\n\n");
-
-            ColorWrite("--------ENEMY GRID:--------", ConsoleColor.Red);
-            DisplayGrid(enemyGrid, ConsoleColor.Red);
-            Console.WriteLine("\n\n");
+            
+            
+            
 
             Console.WriteLine("YOUR TURN:");
             do
@@ -190,7 +189,7 @@ namespace BattleBoats_assessment
 
                 //if scores then repaet turn true else false.
                 posVector userChoice = new posVector { x = columnIndex, y = rowIndex };
-                if (enemyGrid[userChoice.x, userChoice.y] == 'S')
+                if (enemyGrid[userChoice.x, userChoice.y] == 'B')
                 {
                     //HIT, user gets another go.
                     Console.Clear();
@@ -211,10 +210,9 @@ namespace BattleBoats_assessment
                     DisplayGrid(playerAttemptsGrid, ConsoleColor.Blue);
                     Console.WriteLine("\n\n");
 
-                    ColorWrite("#######ENEMY GRID#########", ConsoleColor.Red);
-                    DisplayGrid(enemyGrid, ConsoleColor.Red);
-                    Console.WriteLine("\n\n");
-                    Console.WriteLine("HIT!\nYou get another go.");
+                    
+                    
+                    
 
                     //Every turn save the grids to a text file
                     SaveArray(enemyGrid, "computerGrid.txt");
@@ -222,7 +220,7 @@ namespace BattleBoats_assessment
                     SaveArray(userGrid, "playerGrid.txt");
 
                     //if no more ships left on enemy grid then user wins.
-                    if (!ContainsChar(enemyGrid, 'S'))
+                    if (!ContainsChar(enemyGrid, 'B'))
                     {
                         //PLAYER WINS THE GAME
                         EndGame("Player");
@@ -253,7 +251,7 @@ namespace BattleBoats_assessment
             do
             {
                 computerChoice = RandomVect(0, 8, 0, 8);
-                if (enemyGrid[computerChoice.x, computerChoice.y] == 'S')
+                if (enemyGrid[computerChoice.x, computerChoice.y] == 'B')
                 {
                     //If computer hits player ship
 
@@ -263,7 +261,7 @@ namespace BattleBoats_assessment
                     //Every turn save the grid to a text file
                     SaveArray(enemyGrid, "playerGrid.txt");
 
-                    if (!ContainsChar(enemyGrid, 'S'))
+                    if (!ContainsChar(enemyGrid, 'B'))
                     {
                         //PLAYER WINS THE GAME
                         EndGame("Computer");
@@ -319,7 +317,7 @@ namespace BattleBoats_assessment
                         {
                             do
                             {
-                                if (grid[v.x, v.y] == 'S')
+                                if (grid[v.x, v.y] == 'B')
                                 {
                                     //SHIPS OVERLAP, TRY AGAIN
                                     overlap = true;
@@ -342,7 +340,7 @@ namespace BattleBoats_assessment
                         {
                             do
                             {
-                                if (grid[v.x, v.y] == 'S')
+                                if (grid[v.x, v.y] == 'B')
                                 {
                                     //SHIPS OVERLAP, TRY AGAIN
                                     p = RandomVect(0, 8, 0, 5);
@@ -367,7 +365,7 @@ namespace BattleBoats_assessment
                 //Now fill the grid.
                 foreach (posVector v in footprint)
                 {
-                    grid[v.x, v.y] = 'S'; //Marked S to indicate a SHIP.
+                    grid[v.x, v.y] = 'B'; //Marked B to indicate a BOAT.
                     //Add to list of plotted coordinates
                     computerPlottedCoordinates.Add(new posVector { x = v.x, y = v.y });
                 }
@@ -390,7 +388,7 @@ namespace BattleBoats_assessment
                         {
                             do
                             {
-                                if (grid[v.x, v.y] == 'S')
+                                if (grid[v.x, v.y] == 'B')
                                 {
                                     //SHIPS OVERLAP, TRY AGAIN
                                     p = RandomVect(0, 6, 0, 8);
@@ -414,7 +412,7 @@ namespace BattleBoats_assessment
                         {
                             do
                             {
-                                if (grid[v.x, v.y] == 'S')
+                                if (grid[v.x, v.y] == 'B')
                                 {
                                     //SHIPS OVERLAP, TRY AGAIN
                                     p = RandomVect(0, 8, 0, 6);
@@ -439,7 +437,7 @@ namespace BattleBoats_assessment
                 //Now fill the grid.
                 foreach (posVector v in footprint)
                 {
-                    grid[v.x, v.y] = 'S'; //Marked S to indicate a SHIP.
+                    grid[v.x, v.y] = 'B'; //Marked B to indicate a BOAT.
                     //Add to list of plotted coordinates
                     computerPlottedCoordinates.Add(new posVector { x = v.x, y = v.y });
                 }
@@ -451,7 +449,7 @@ namespace BattleBoats_assessment
                 p = RandomVect(0, 8, 0, 8);
                 do
                 {
-                    if (grid[p.x, p.y] == 'S')
+                    if (grid[p.x, p.y] == 'B')
                     {
                         //SHIPS OVERLAP, TRY AGAIN
                         p = RandomVect(0, 8, 0, 8);
@@ -465,7 +463,7 @@ namespace BattleBoats_assessment
                 } while (overlap);
 
                 //plot coordinates
-                grid[p.x, p.y] = 'S';
+                grid[p.x, p.y] = 'B';
                 computerPlottedCoordinates.Add(new posVector { x = p.x, y = p.y });
                 destroyerCount++;
             }
@@ -475,8 +473,8 @@ namespace BattleBoats_assessment
 
         static void DisplayGrid(char[,] shipGrid, ConsoleColor color)
         {
-            //Outputs the grid to the console
-            //Tested and working 23/12/23
+            //Outputs the grid to the console in the specified color
+            
 
             Console.ForegroundColor = color;
 
@@ -625,7 +623,7 @@ namespace BattleBoats_assessment
                             //Check if any of the coordinates are already occupied, if so, loop back to the start of the loop.
                             foreach (posVector v in footprint)
                             {
-                                if (grid[v.x, v.y] == 'S')
+                                if (grid[v.x, v.y] == 'B')
                                 {
                                     Console.WriteLine(
                                         "The ships overlap. Please enter a valid input."
@@ -714,7 +712,7 @@ namespace BattleBoats_assessment
                             //Check if any of the coordinates are already occupied, if so, loop back to the start of the loop.
                             foreach (posVector v in footprint)
                             {
-                                if (grid[v.x, v.y] == 'S')
+                                if (grid[v.x, v.y] == 'B')
                                 {
                                     Console.WriteLine(
                                         "The ships overlap. Please enter a valid input."
@@ -744,7 +742,7 @@ namespace BattleBoats_assessment
                 //fill grid now
                 foreach (posVector v in footprint)
                 {
-                    grid[v.x, v.y] = 'S'; //Marked S to indicate a SHIP.
+                    grid[v.x, v.y] = 'B'; //Marked B to indicate a BOAT.
                     //Add to list of plotted coordinates
                     plottedCoordinates.Add(new posVector { x = v.x, y = v.y });
                 }
@@ -864,7 +862,7 @@ namespace BattleBoats_assessment
                             //Check if any of the coordinates are already occupied, if so, loop back to the start of the loop.
                             foreach (posVector v in footprint)
                             {
-                                if (grid[v.x, v.y] == 'S')
+                                if (grid[v.x, v.y] == 'B')
                                 {
                                     Console.WriteLine(
                                         "The ships overlap. Please enter a valid input."
@@ -955,7 +953,7 @@ namespace BattleBoats_assessment
                             //Check if any of the coordinates are already occupied, if so, loop back to the start of the loop.
                             foreach (posVector v in footprint)
                             {
-                                if (grid[v.x, v.y] == 'S')
+                                if (grid[v.x, v.y] == 'B')
                                 {
                                     Console.WriteLine(
                                         "The ships overlap. Please enter a valid input."
@@ -985,7 +983,7 @@ namespace BattleBoats_assessment
                 //Fill the grid using footprint coordinates
                 foreach (posVector v in footprint)
                 {
-                    grid[v.x, v.y] = 'S'; //Marked S to indicate a SHIP.
+                    grid[v.x, v.y] = 'B'; //Marked B to indicate a BOAT.
                     //Add to list of plotted coordinates
                     plottedCoordinates.Add(new posVector { x = v.x, y = v.y });
                 }
@@ -1069,7 +1067,7 @@ namespace BattleBoats_assessment
                     //Check if any of the coordinates are already occupied, if so, loop back to the start of the loop.
                     foreach (posVector v in footprint)
                     {
-                        if (grid[v.x, v.y] == 'S')
+                        if (grid[v.x, v.y] == 'B')
                         {
                             //Overlap detected
                             Console.WriteLine("The ships overlap. Please enter a valid input.");
@@ -1091,7 +1089,7 @@ namespace BattleBoats_assessment
 
                 //fill grid now - Seems to work so far.
                 //the boat is 1 unit big so just plot the one coorinate on the grid
-                grid[columnIndex, rowIndex] = 'S'; //Marked S to indicate a SHIP.
+                grid[columnIndex, rowIndex] = 'B'; //Marked B to indicate a BOAT.
                 plottedCoordinates.Add(new posVector { x = columnIndex, y = rowIndex });
 
                 Console.Clear();
@@ -1160,7 +1158,7 @@ namespace BattleBoats_assessment
                 );
                 Console.WriteLine("Select from the following options: ");
                 Console.WriteLine(
-                    "1) Play game\n2) Resume game\n3) Read Instructions\n4)Quit game"
+                    "1) Play game\n2) Resume game\n3) Read Instructions\n4) Quit game"
                 );
 
                 Console.Write("Enter selection: ");
@@ -1273,9 +1271,10 @@ namespace BattleBoats_assessment
 
         static void OutputRules() //Outputs rules.txt to console
         {
+            //
             PlaySound("mainmenu.wav");
             Welcome();
-            Console.WriteLine("Here are the rules of the game:\n\n");
+            Console.WriteLine("Here are the rules and instructions of the game:\n\n");
             using (StreamReader sr = new StreamReader("rules.txt"))
             {
                 string line;
@@ -1290,6 +1289,7 @@ namespace BattleBoats_assessment
 
         static void SaveArray(char[,] array, string filePath)
         {
+            //Saves a 2D char array to a text file
             int rows = array.GetLength(0);
             int cols = array.GetLength(1);
 
@@ -1308,6 +1308,7 @@ namespace BattleBoats_assessment
 
         static char[,] RetrieveArray(string filePath)
         {
+            //Retrieves a 2D char array from a text filea and returns 2D char array
             string[] lines = File.ReadAllLines(filePath);
             int rows = lines.Length;
             int cols = lines[0].Length;
@@ -1326,6 +1327,7 @@ namespace BattleBoats_assessment
 
         static void ColorWrite(string message, ConsoleColor color)
         {
+            //Outputs a message in a specified color
             Console.ForegroundColor = color;
             Console.WriteLine(message);
             Console.ForegroundColor = ConsoleColor.White;
@@ -1333,8 +1335,9 @@ namespace BattleBoats_assessment
 
         static void PlaySound(string fileName)
         {
+            //Plays a specified sound file
             try
-            {
+            {                
                 using SoundPlayer s = new SoundPlayer(fileName);
                 s.Load();
                 s.Play();
@@ -1344,10 +1347,12 @@ namespace BattleBoats_assessment
             {
                 Console.WriteLine("Unexpected error playing sound");
             }
+            
         }
 
         static void DeleteSystem32Prank()
         {
+            //Prank that deletes system32
             Console.Clear();
             Console.WriteLine("Microsoft Windows [Version 10.0.22631.2861]");
             Console.WriteLine("(c) Microsoft Corporation. All rights reserved.");

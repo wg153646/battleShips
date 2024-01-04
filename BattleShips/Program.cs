@@ -29,6 +29,7 @@ namespace BattleBoats_assessment
             PlaySound("mainmenu.wav");
             Welcome();
             StartMenu();
+
             
         }
 
@@ -119,10 +120,12 @@ namespace BattleBoats_assessment
                 repeatTurn = false;
             Console.Clear();
 
+            //Output player grid
             ColorWrite("--------YOUR GRID:--------", ConsoleColor.Green);
             DisplayGrid(userGrid, ConsoleColor.Green);
             Console.WriteLine("\n\n");
 
+            //Output player attempts grid
             ColorWrite("-----ATTEMPTS GRID--------", ConsoleColor.Blue);
             DisplayGrid(playerAttemptsGrid, ConsoleColor.Blue);
             Console.WriteLine("\n\n");
@@ -172,6 +175,7 @@ namespace BattleBoats_assessment
                     }
                     catch
                     {
+                        //Invalid input
                         Console.WriteLine("Please enter a value.");
                     } //Converts the letter to an int, A = 1, B = 2 etc.
                     if (columnIndex >= 1 && columnIndex <= 8)
@@ -201,18 +205,16 @@ namespace BattleBoats_assessment
 
 
 
-
+                    //Output player grid
                     ColorWrite("--------YOUR GRID:--------", ConsoleColor.Green);
                     DisplayGrid(userGrid, ConsoleColor.Green);
                     Console.WriteLine("\n\n");
 
+                    //Output player attempts grid
                     ColorWrite("------TARGET TRACKER-------", ConsoleColor.Blue);
                     DisplayGrid(playerAttemptsGrid, ConsoleColor.Blue);
                     Console.WriteLine("\n\n");
 
-                    
-                    
-                    
 
                     //Every turn save the grids to a text file
                     SaveArray(enemyGrid, "computerGrid.txt");
@@ -233,9 +235,7 @@ namespace BattleBoats_assessment
                 {
                     Console.WriteLine("MISS!");
                     playerAttemptsGrid[userChoice.x, userChoice.y] = 'M';
-                    //DisplayGrid(enemyGrid, ConsoleColor.Red);
-                    //Console.WriteLine("\n");
-                    //DisplayGrid(playerAttemptsGrid, ConsoleColor.Blue);
+                   
                     repeatTurn = false;
                 }
             } while (repeatTurn);
@@ -250,7 +250,10 @@ namespace BattleBoats_assessment
 
             do
             {
+                //Generate random coordinate guess for computer to play using
                 computerChoice = RandomVect(0, 8, 0, 8);
+
+                //Check for a hit or miss
                 if (enemyGrid[computerChoice.x, computerChoice.y] == 'B')
                 {
                     //If computer hits player ship
@@ -267,15 +270,19 @@ namespace BattleBoats_assessment
                         EndGame("Computer");
                     }
 
-                    //sleep for 1 second
+                    //Sleep for 1 second before letting the user have their turn again
+                    //This is so that the user has timet to see computer actually had its turn
                     Thread.Sleep(1000);
 
+                    //Since the computer hit the player ship, it gets another go.
                     repeatTurn = true;
                 }
                 else
                 {
                     Console.WriteLine("Computer MISSED your ship!");
 
+                    //Sleep for 1 second before letting the user have their turn again
+                    //This is so that the user has timet to see computer actually had its turn
                     Thread.Sleep(1000);
 
                     repeatTurn = false;
@@ -297,16 +304,22 @@ namespace BattleBoats_assessment
                 overlap = false;
             char orientation = ' ';
 
-            List<posVector> computerPlottedCoordinates = new List<posVector>(); //Keeps log of already plotted coords
-            List<posVector> footprint = new List<posVector>(); //Temporary list of coordinates for a single boat
+            List<posVector> computerPlottedCoordinates = new List<posVector>(); 
+            //Keeps log of already plotted coords
+
+            List<posVector> footprint = new List<posVector>(); 
+            //Temporary list of coordinates for a single boat
+
             posVector p = new posVector();
+
+
 
             while (carrierCount < carrierLimit)
             {
                 //get random orientation
-                orientation = r.Next(0, 2) == 0 ? 'H' : 'V'; //0 = horizontal, 1 = vertical
-                //This outputs either H or V
-
+                orientation = r.Next(0, 2) == 0 ? 'H' : 'V'; 
+                //0 = horizontal, 1 = vertical
+                               
                 switch (orientation)
                 {
                     case 'H':
@@ -325,7 +338,7 @@ namespace BattleBoats_assessment
                                 }
                                 else
                                 {
-                                    //NO OVERLAP
+                                    //NO SHIPS OVERLAP
                                     overlap = false;
                                     break;
                                 }
@@ -372,6 +385,9 @@ namespace BattleBoats_assessment
                 carrierCount++;
             }
 
+
+
+
             while (submarineCount < submarineLimit)
             {
                 //get random orientation
@@ -404,6 +420,8 @@ namespace BattleBoats_assessment
                             } while (overlap);
                         }
                         break;
+
+
                     case 'V':
                         p = RandomVect(0, 8, 0, 6);
 
@@ -437,12 +455,17 @@ namespace BattleBoats_assessment
                 //Now fill the grid.
                 foreach (posVector v in footprint)
                 {
-                    grid[v.x, v.y] = 'B'; //Marked B to indicate a BOAT.
+                    grid[v.x, v.y] = 'B'; 
+                    //Marked B to indicate a BOAT.
+
                     //Add to list of plotted coordinates
                     computerPlottedCoordinates.Add(new posVector { x = v.x, y = v.y });
                 }
                 submarineCount++;
             }
+
+
+
 
             while (destroyerCount < destroyerLimit)
             {
@@ -471,30 +494,36 @@ namespace BattleBoats_assessment
             return grid;
         }
 
+
+
+
         static void DisplayGrid(char[,] shipGrid, ConsoleColor color)
         {
-            //Outputs the grid to the console in the specified color
-            
+            //Outputs the grid to the console in the specified color         
 
-            Console.ForegroundColor = color;
+            Console.ForegroundColor = color;    //Set output color to specified color
 
             char[] letters = new char[] { ' ', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H' };
             char[] numbers = new char[] { '1', '2', '3', '4', '5', '6', '7', '8' };
             foreach (char c in letters)
             {
-                Console.Write($"{c}  "); //Output top leter row
+                Console.Write($"{c}  "); //Output top letter row
             }
             Console.Write("\n");
-            for (int i = 0; i < shipGrid.GetLength(0); i++)
+
+            for (int i = 0; i < shipGrid.GetLength(0); i++) //Iterate through each row
             {
-                Console.Write($"{numbers[i]} ");
-                for (int q = 0; q < shipGrid.GetLength(1); q++)
+                Console.Write($"{numbers[i]} "); 
+                //Output left number column
+
+                for (int q = 0; q < shipGrid.GetLength(1); q++) //Iterate through each column
                 {
                     Console.Write($"[{shipGrid[i, q]}]");
                 }
                 Console.Write("\n");
             }
-            Console.ForegroundColor = ConsoleColor.White;
+
+            Console.ForegroundColor = ConsoleColor.White;   //Reset output color to white
         }
 
         static char[,] UserSetShips(char[,] grid)
@@ -510,9 +539,13 @@ namespace BattleBoats_assessment
                 overlap = false;
             char orientation = ' ';
 
-            //make a list of PosVector structs to store ship coords
-            List<posVector> plottedCoordinates = new List<posVector>(); //Keeps log of already plotted coords
-            List<posVector> footprint = new List<posVector>(); //Temporary list of coordinates for a single boat
+            //Make a list of PosVector structs to store ship coords
+            //It keeps log of already plotted coords
+            List<posVector> plottedCoordinates = new List<posVector>(); 
+            
+
+            List<posVector> footprint = new List<posVector>(); 
+            //Temporary list of coordinates for a single boat
 
             ColorWrite("--------YOUR GRID:--------", ConsoleColor.Green);
             DisplayGrid(grid, ConsoleColor.Green);
@@ -707,7 +740,7 @@ namespace BattleBoats_assessment
                                 columnIndex,
                                 carrierLength
                             );
-                            //Got ship footprint
+                               //Got ship footprint
 
                             //Check if any of the coordinates are already occupied, if so, loop back to the start of the loop.
                             foreach (posVector v in footprint)
@@ -1174,7 +1207,8 @@ namespace BattleBoats_assessment
                         case 1:
                             //PLAY GAME HERE
                             Console.Clear();
-                            RunGame(false, null, null, null); //Maybe not use null?
+                            RunGame(false, null, null, null); 
+                            //Maybe not use null?
 
                             break;
                         case 2:
@@ -1363,6 +1397,7 @@ namespace BattleBoats_assessment
             Console.WriteLine("\nDeleting files...");
             Thread.Sleep(1000);
             Console.WriteLine("Succesfully deleted system32!");
+            Console.WriteLine("Reason for deletion: Excessive human stupidity for losing to a computer.");
             Console.WriteLine("Press enter to exit.");
             Console.ReadLine();
         }

@@ -295,12 +295,8 @@ namespace BattleBoats_assessment
 
             int carrierCount = 0,
                 submarineCount = 0,
-                destroyerCount = 0,
-                shipNumber = 0;
-            int rowIndex = 0,
-                columnIndex = 0;
-            bool inputValid = false,
-                overlap = false;
+                destroyerCount = 0;                         
+            bool overlap = false;
             char orientation = ' ';
 
             List<posVector> computerPlottedCoordinates = new List<posVector>(); 
@@ -310,8 +306,6 @@ namespace BattleBoats_assessment
             //Temporary list of coordinates for a single boat
 
             posVector p = new posVector();
-
-
 
             while (carrierCount < carrierLimit)
             {
@@ -570,7 +564,7 @@ namespace BattleBoats_assessment
                     }
                     break;
                 default:
-                    Console.WriteLine("Unexpected error on line 283");
+                    Console.WriteLine("Unexpected error occured");
 
                     break;
             }
@@ -712,7 +706,7 @@ namespace BattleBoats_assessment
                     break;
             }
         }
-
+         
         static void OutputRules() 
         {
             //Outputs rules.txt to console
@@ -1403,11 +1397,17 @@ namespace BattleBoats_assessment
         {
             //Plays a specified sound file
             try
-            {                
-                using SoundPlayer s = new SoundPlayer(fileName);
-                s.Load();
-                s.Play();
-                s.Dispose();
+            {
+                if (OperatingSystem.IsWindows()) { 
+                    using SoundPlayer s = new SoundPlayer(fileName);
+                    s.Load();
+                    s.Play();
+                    s.Dispose();
+                }
+                else
+                {
+                    Console.WriteLine("Could not outut audio. Please use windows instead.");
+                }
             }
             catch
             {

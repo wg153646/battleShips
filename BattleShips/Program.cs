@@ -28,9 +28,7 @@ namespace BattleBoats_assessment
         {
             PlaySound("mainmenu.wav");
             Welcome();
-            StartMenu();
-
-            
+            GameMenu();            
         }
 
         static void RunGame(
@@ -111,6 +109,7 @@ namespace BattleBoats_assessment
             //Now run the game
             RunGame(true, playerGrid, playerAttemptsGrid, computerGrid);
             //pass true to indicate that this is a resumed game.
+            
         }
 
         static void UserTurn(char[,] enemyGrid, char[,] playerAttemptsGrid, char[,] userGrid)
@@ -495,8 +494,6 @@ namespace BattleBoats_assessment
         }
 
 
-
-
         static void DisplayGrid(char[,] shipGrid, ConsoleColor color)
         {
             //Outputs the grid to the console in the specified color         
@@ -529,26 +526,260 @@ namespace BattleBoats_assessment
         static char[,] UserSetShips(char[,] grid)
         {
             //Allows the user to set their ships on the grid
-            int carrierCount = 0,
-                submarineCount = 0,
-                destroyerCount = 0,
-                shipNumber = 0;
-            int rowIndex = 0,
-                columnIndex = 0;
-            bool inputValid = false,
-                overlap = false;
             char orientation = ' ';
 
             //Make a list of PosVector structs to store ship coords
             //It keeps log of already plotted coords
-            List<posVector> plottedCoordinates = new List<posVector>(); 
-            
-
-            List<posVector> footprint = new List<posVector>(); 
+            //List<posVector> plottedCoordinates = new List<posVector>(); 
+            //List<posVector> footprint = new List<posVector>(); 
             //Temporary list of coordinates for a single boat
 
             ColorWrite("--------YOUR GRID:--------", ConsoleColor.Green);
             DisplayGrid(grid, ConsoleColor.Green);
+
+            grid = AddCarriers(grid, orientation);
+            grid = AddSubmarines(grid, orientation);
+            grid = AddDestroyers(grid, orientation);
+                       
+
+            return grid;
+        }
+
+        static List<posVector> GetCoordList(
+            char orientation,
+            int rowIndex,
+            int columnIndex,
+            int shipLength
+        )
+        {
+            orientation = char.ToUpper(orientation); //Converts the orientation to uppercase
+            //Returns a list of coordinates for a ship footprint based on the orientation and the starting position.
+            List<posVector> coordList = new List<posVector>(); //New list of vectors to store the coordinates
+            switch (orientation)
+            {
+                case 'H': //If the ship is horizontal
+                    for (int i = 0; i < shipLength; i++)
+                    {
+                        coordList.Add(new posVector { x = columnIndex, y = rowIndex + i });
+                    }
+                    break;
+                case 'V': //If the ship is vertical
+                    for (int i = 0; i < shipLength; i++)
+                    {
+                        coordList.Add(new posVector { x = columnIndex + i, y = rowIndex });
+                    }
+                    break;
+                default:
+                    Console.WriteLine("Unexpected error on line 283");
+
+                    break;
+            }
+            return coordList;
+        }
+
+        static posVector RandomVect(int xlowerLim, int xupperLim, int ylowerLim, int yupperLim)
+        {
+            //make new posvector
+            posVector v = new posVector();
+            //assign random x and y values
+            Random r = new Random();
+            v.x = r.Next(xlowerLim, xupperLim);
+            v.y = r.Next(ylowerLim, yupperLim);
+            return v;
+        }
+
+        static void GameMenu()
+        {
+            bool validInput = false;
+            string rawUserInput = String.Empty;
+            int userChoice;
+
+            while (validInput == false)
+            {
+                //Output Start menu
+                Console.WriteLine(
+                    "Before you play the game, please ensure the game is a fullscreen window."
+                );
+                Console.WriteLine("Select from the following options: ");
+                Console.WriteLine(
+                    "1) Play game\n2) Resume game\n3) Read Instructions\n4) Quit game");
+
+                Console.Write("Enter selection: ");
+                rawUserInput = Console.ReadLine();
+                Console.WriteLine("\n\n");
+                if (rawUserInput.Length == 1 && "1234".Contains(rawUserInput))
+                { //Checks if input is valid
+                    validInput = true;
+
+                    userChoice = Convert.ToInt32(rawUserInput);
+                    switch (userChoice)
+                    {
+                        case 1:
+                            //PLAY GAME HERE
+                            Console.Clear();
+                            RunGame(false, null, null, null); 
+                            //Maybe not use null?
+
+                            break;
+                        case 2:
+                            //RESUME GAME HERE
+                            ResumeGame();
+                            break;
+                        case 3:
+                            //READ RULES
+                            Console.Clear();
+                            OutputRules();
+                            Console.WriteLine("Rules:\n\n"); //Output rules.txt to console
+                            break;
+                        case 4:
+                            //QUIT PROGRAM;
+                            Environment.Exit(0);
+                            break;
+                        default:
+                            Console.WriteLine("Program error!");
+                            break;
+                    }
+                }
+                else
+                {
+                    Console.Clear();
+                    Console.WriteLine("Invalid input, please enter a value again.");
+                }
+            }
+        }
+
+        static bool ContainsChar(char[,] grid, char c)
+        {
+            bool contains = false;
+            for (int i = 0; i < grid.GetLength(0); i++)
+            {
+                for (int q = 0; q < grid.GetLength(1); q++)
+                {
+                    if (grid[i, q] == c)
+                    {
+                        contains = true;
+                        break;
+                    }
+                }
+                if (contains)
+                {
+                    break;
+                }
+            }
+            return contains;
+        }
+
+        static void Welcome()
+        {
+            //Displays "BattleBoats" in ASCII art
+            Console.WriteLine("Welcome to");
+            Console.WriteLine("  ____          _    _    _        ____                 _        ");
+            Console.WriteLine(" |  _ \\        | |  | |  | |      |  _ \\               | |       ");
+            Console.WriteLine(" | |_) |  __ _ | |_ | |_ | |  ___ | |_) |  ___    __ _ | |_  ___ ");
+            Console.WriteLine(" |  _ <  / _` || __|| __|| | / _ \\|  _ <  / _ \\  / _` || __|/ __|");
+            Console.WriteLine(" | |_) || (_| || |_ | |_ | ||  __/| |_) || (_) || (_| || |_ \\__ \\");
+            Console.WriteLine(" |____/  \\__,_| \\__| \\__||_| \\___||____/  \\___/  \\__,_| \\__||___/");
+            Console.WriteLine("                                                                        ");
+        }
+
+        static void EndGame(string winner)
+        {
+            Console.Clear();
+            switch (winner)
+            {
+                case "Player":
+                    PlaySound("welldone.wav");
+                    Console.Clear();
+                    ColorWrite(
+                        "Congratulations, you have won!\nPress enter to exit the program.",
+                        ConsoleColor.Magenta
+                    );
+                    Console.ReadLine(); //End of program. Press enter to exit.
+
+                    Environment.Exit(0);
+                    break;
+                case "Computer":
+                    //play welldone.mp3
+                    PlaySound("notarickroll.wav");
+                    Console.Clear();
+                    ColorWrite("The computer has won!", ConsoleColor.Magenta);
+                    Thread.Sleep(3000);
+                    DeleteSystem32Prank();
+                    break;
+                default:
+                    Console.Clear();
+                    ColorWrite("Unexpected error occured.", ConsoleColor.Magenta);
+                    break;
+            }
+        }
+
+        static void OutputRules() 
+        {
+            //Outputs rules.txt to console
+            PlaySound("mainmenu.wav");
+            Welcome();
+            Console.WriteLine("Here are the rules and instructions of the game:\n\n");
+            using (StreamReader sr = new StreamReader("rules.txt"))
+            {
+                string line;
+                while ((line = sr.ReadLine()) != null) //Iterate through each line of rules.txt
+                {
+                    Console.WriteLine(line);
+                }
+            }
+            Console.WriteLine("\nPress enter to exit.");
+            Console.ReadLine();
+        }
+
+        static void SaveArray(char[,] array, string filePath)
+        {
+            //Saves a 2D char array to a text file
+            int rows = array.GetLength(0);
+            int cols = array.GetLength(1);
+
+            using (StreamWriter writer = new StreamWriter(filePath))
+            {
+                for (int i = 0; i < rows; i++)
+                {
+                    for (int j = 0; j < cols; j++)
+                    {
+                        writer.Write(array[i, j]);
+                    }
+                    writer.WriteLine(); // Move to the next line after each row
+                }
+            }
+        }
+
+        static char[,] RetrieveArray(string filePath)
+        {
+            //Retrieves a 2D char array from a text filea and returns 2D char array
+            string[] lines = File.ReadAllLines(filePath);
+            int rows = lines.Length;
+            int cols = lines[0].Length;
+
+            char[,] retrievedArray = new char[rows, cols];
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    retrievedArray[i, j] = lines[i][j];
+                }
+            }
+            return retrievedArray;
+        }
+
+        static char[,] AddCarriers(char[,] grid, char orientation)
+        {
+            int carrierCount = 0, rowIndex = 0, columnIndex = 0;
+            bool inputValid = false, overlap = false;
+            //Make a list of PosVector structs to store ship coords
+            //It keeps log of already plotted coords
+            List<posVector> plottedCoordinates = new List<posVector>();
+
+
+            List<posVector> footprint = new List<posVector>();
+            //Temporary list of coordinates for a single boat
 
             while (carrierCount < carrierLimit)
             {
@@ -740,7 +971,7 @@ namespace BattleBoats_assessment
                                 columnIndex,
                                 carrierLength
                             );
-                               //Got ship footprint
+                            //Got ship footprint
 
                             //Check if any of the coordinates are already occupied, if so, loop back to the start of the loop.
                             foreach (posVector v in footprint)
@@ -787,7 +1018,19 @@ namespace BattleBoats_assessment
 
                 carrierCount++;
             } //Finished adding carriers
+            return grid;
+        }
 
+        static char[,] AddSubmarines(char[,] grid, char orientation)
+        {
+            int submarineCount = 0, rowIndex = 0, columnIndex = 0;
+            bool inputValid = false, overlap = false;
+            //Make a list of PosVector structs to store ship coords
+            //It keeps log of already plotted coords
+            List<posVector> plottedCoordinates = new List<posVector>();
+
+            List<posVector> footprint = new List<posVector>();
+            //Temporary list of coordinates for a single boat
             while (submarineCount < submarineLimit)
             {
                 //Get ship orientation
@@ -1027,6 +1270,19 @@ namespace BattleBoats_assessment
 
                 submarineCount++;
             } //Finished adding submarines
+            return grid;
+        }
+
+        static char[,] AddDestroyers(char[,] grid, char orientation)
+        {
+            int destroyerCount = 0, rowIndex = 0, columnIndex = 0;
+            bool inputValid = false, overlap = false;
+            //Make a list of PosVector structs to store ship coords
+            //It keeps log of already plotted coords
+            List<posVector> plottedCoordinates = new List<posVector>();
+
+            List<posVector> footprint = new List<posVector>();
+            //Temporary list of coordinates for a single boat
 
             while (destroyerCount < destroyerLimit)
             {
@@ -1131,232 +1387,8 @@ namespace BattleBoats_assessment
 
                 destroyerCount++;
             }
-
             return grid;
-        }
 
-        static List<posVector> GetCoordList(
-            char orientation,
-            int rowIndex,
-            int columnIndex,
-            int shipLength
-        )
-        {
-            orientation = char.ToUpper(orientation); //Converts the orientation to uppercase
-            //Returns a list of coordinates for a ship footprint based on the orientation and the starting position.
-            List<posVector> coordList = new List<posVector>(); //New list of vectors to store the coordinates
-            switch (orientation)
-            {
-                case 'H': //If the ship is horizontal
-                    for (int i = 0; i < shipLength; i++)
-                    {
-                        coordList.Add(new posVector { x = columnIndex, y = rowIndex + i });
-                    }
-                    break;
-                case 'V': //If the ship is vertical
-                    for (int i = 0; i < shipLength; i++)
-                    {
-                        coordList.Add(new posVector { x = columnIndex + i, y = rowIndex });
-                    }
-                    break;
-                default:
-                    Console.WriteLine("Unexpected error on line 283");
-
-                    break;
-            }
-            return coordList;
-        }
-
-        static posVector RandomVect(int xlowerLim, int xupperLim, int ylowerLim, int yupperLim)
-        {
-            //make new posvector
-            posVector v = new posVector();
-            //assign random x and y values
-            Random r = new Random();
-            v.x = r.Next(xlowerLim, xupperLim);
-            v.y = r.Next(ylowerLim, yupperLim);
-            return v;
-        }
-
-        static void StartMenu()
-        {
-            bool validInput = false;
-            string rawUserInput = String.Empty;
-            int userChoice;
-
-            while (validInput == false)
-            {
-                Console.WriteLine(
-                    "Before you play the game, please ensure the game is a fullscreen window."
-                );
-                Console.WriteLine("Select from the following options: ");
-                Console.WriteLine(
-                    "1) Play game\n2) Resume game\n3) Read Instructions\n4) Quit game"
-                );
-
-                Console.Write("Enter selection: ");
-                rawUserInput = Console.ReadLine();
-                Console.WriteLine("\n\n");
-                if (rawUserInput.Length == 1 && "1234".Contains(rawUserInput))
-                { //Checks if input is valid
-                    validInput = true;
-
-                    userChoice = Convert.ToInt32(rawUserInput);
-                    switch (userChoice)
-                    {
-                        case 1:
-                            //PLAY GAME HERE
-                            Console.Clear();
-                            RunGame(false, null, null, null); 
-                            //Maybe not use null?
-
-                            break;
-                        case 2:
-                            //RESUME GAME HERE
-                            ResumeGame();
-                            break;
-                        case 3:
-                            //READ RULES
-                            Console.Clear();
-                            OutputRules();
-                            Console.WriteLine("Rules:\n\n"); //Output rules.txt to console
-                            break;
-                        case 4:
-                            //QUIT PROGRAM;
-                            Environment.Exit(0);
-                            break;
-                        default:
-                            Console.WriteLine("Program error!");
-                            break;
-                    }
-                }
-                else
-                {
-                    Console.Clear();
-                    Console.WriteLine("Invalid input, please enter a value again.");
-                }
-            }
-        }
-
-        static bool ContainsChar(char[,] grid, char c)
-        {
-            bool contains = false;
-            for (int i = 0; i < grid.GetLength(0); i++)
-            {
-                for (int q = 0; q < grid.GetLength(1); q++)
-                {
-                    if (grid[i, q] == c)
-                    {
-                        contains = true;
-                        break;
-                    }
-                }
-                if (contains)
-                {
-                    break;
-                }
-            }
-            return contains;
-        }
-
-        static void Welcome()
-        {
-            //Displays "BattleBoats" in ASCII art
-            Console.WriteLine("Welcome to");
-            Console.WriteLine("  ____          _    _    _        ____                 _        ");
-            Console.WriteLine(" |  _ \\        | |  | |  | |      |  _ \\               | |       ");
-            Console.WriteLine(" | |_) |  __ _ | |_ | |_ | |  ___ | |_) |  ___    __ _ | |_  ___ ");
-            Console.WriteLine(" |  _ <  / _` || __|| __|| | / _ \\|  _ <  / _ \\  / _` || __|/ __|");
-            Console.WriteLine(" | |_) || (_| || |_ | |_ | ||  __/| |_) || (_) || (_| || |_ \\__ \\");
-            Console.WriteLine(" |____/  \\__,_| \\__| \\__||_| \\___||____/  \\___/  \\__,_| \\__||___/");
-            Console.WriteLine("                                                                        ");
-        }
-
-        static void EndGame(string winner)
-        {
-            Console.Clear();
-            switch (winner)
-            {
-                case "Player":
-                    PlaySound("welldone.wav");
-                    Console.Clear();
-                    ColorWrite(
-                        "Congratulations, you have won!\nPress enter to exit the program.",
-                        ConsoleColor.Magenta
-                    );
-                    Console.ReadLine(); //End of program. Press enter to exit.
-
-                    Environment.Exit(0);
-                    break;
-                case "Computer":
-                    //play welldone.mp3
-                    PlaySound("notarickroll.wav");
-                    Console.Clear();
-                    ColorWrite("The computer has won!", ConsoleColor.Magenta);
-                    Thread.Sleep(3000);
-                    DeleteSystem32Prank();
-                    break;
-                default:
-                    Console.Clear();
-                    ColorWrite("Unexpected error occured.", ConsoleColor.Magenta);
-                    break;
-            }
-        }
-
-        static void OutputRules() //Outputs rules.txt to console
-        {
-            //
-            PlaySound("mainmenu.wav");
-            Welcome();
-            Console.WriteLine("Here are the rules and instructions of the game:\n\n");
-            using (StreamReader sr = new StreamReader("rules.txt"))
-            {
-                string line;
-                while ((line = sr.ReadLine()) != null) //Iterate through each line of rules.txt
-                {
-                    Console.WriteLine(line);
-                }
-            }
-            Console.WriteLine("\nPress enter to exit.");
-            Console.ReadLine();
-        }
-
-        static void SaveArray(char[,] array, string filePath)
-        {
-            //Saves a 2D char array to a text file
-            int rows = array.GetLength(0);
-            int cols = array.GetLength(1);
-
-            using (StreamWriter writer = new StreamWriter(filePath))
-            {
-                for (int i = 0; i < rows; i++)
-                {
-                    for (int j = 0; j < cols; j++)
-                    {
-                        writer.Write(array[i, j]);
-                    }
-                    writer.WriteLine(); // Move to the next line after each row
-                }
-            }
-        }
-
-        static char[,] RetrieveArray(string filePath)
-        {
-            //Retrieves a 2D char array from a text filea and returns 2D char array
-            string[] lines = File.ReadAllLines(filePath);
-            int rows = lines.Length;
-            int cols = lines[0].Length;
-
-            char[,] retrievedArray = new char[rows, cols];
-
-            for (int i = 0; i < rows; i++)
-            {
-                for (int j = 0; j < cols; j++)
-                {
-                    retrievedArray[i, j] = lines[i][j];
-                }
-            }
-            return retrievedArray;
         }
 
         static void ColorWrite(string message, ConsoleColor color)
